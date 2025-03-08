@@ -19,24 +19,24 @@ function ReclaimDemo() {
       return;
     }
 
-    // Initialize the Reclaim SDK with your credentials
+    // Reclaim SDKを認証情報で初期化
     const reclaimProofRequest = await ReclaimProofRequest.init(APP_ID, APP_SECRET, PROVIDER_ID);
  
-    // Generate the verification request URL
+    // 認証リクエストURLを生成
     const requestUrl = await reclaimProofRequest.getRequestUrl();
     setRequestUrl(requestUrl);
  
-    // Start listening for proof submissions
+    // プルーフの提出を監視開始
     await reclaimProofRequest.startSession({
       onSuccess: (proofs) => {
         setProofs(proofs);
         setIsVerified(true);
         
         try {
-          // Extract user data from proofs
+          // プルーフからユーザーデータを抽出
           let extractedData = null;
           
-          // If proofs is an array
+          // proofsが配列の場合
           if (Array.isArray(proofs) && proofs.length > 0) {
             if (proofs[0].publicData) {
               extractedData = {
@@ -46,7 +46,7 @@ function ReclaimDemo() {
               };
             }
           } 
-          // If proofs is an object with publicData
+          // proofsがpublicDataを持つオブジェクトの場合
           else if (proofs && proofs.publicData) {
             extractedData = {
               username: proofs.publicData.username || 'N/A',
@@ -59,11 +59,11 @@ function ReclaimDemo() {
             setUserData(extractedData);
           }
         } catch (error) {
-          console.error('Error extracting user data:', error);
+          console.error('ユーザーデータの抽出中にエラーが発生しました:', error);
         }
       },
       onError: (error) => {
-        console.error('Verification failed', error);
+        console.error('認証に失敗しました', error);
       },
     });
   };
